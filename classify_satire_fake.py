@@ -12,6 +12,7 @@ import numpy as np
 import codecs
 import nltk
 import pickle
+import my_utils
 from sklearn.feature_extraction.text import TfidfVectorizer,TfidfTransformer,CountVectorizer,HashingVectorizer
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.snowball import SnowballStemmer
@@ -42,43 +43,27 @@ from scipy.stats import pearsonr
 
 import warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-#%%
-# READ DATA FILES
-import codecs
-headlines_data=[]
-text_data=[]
-target=[]
-base_dir="FakeNewsData/StoryText 2/"
-files_list=open(base_dir+"list2","r")
-for f in files_list:
-    try:
-        curr_file=codecs.open(base_dir+f.strip(),"r",encoding="ISO-8859-1")
-        lines=curr_file.readlines()
-        headlines_data.append(lines[0].strip())
-        text_data.append(lines[0].strip()+" "+lines[2].strip())
-        if "Fake" in f:
-            target.append(-1)
-        else:
-            target.append(1)
-        curr_file.close()
-    except Exception as e: 
-        print(e)
-files_list.close()
 
+data_files = my_utils.read_fake_satire_data("FakeNewsData/StoryText 2/")
+headlines_data = data_files[0]
+text_data = data_files[1]
+target = data_files[2]
 
 #%%
 # SET TOKENIZER WITH STEMMING
-#from nltk.stem.porter import *    
-#stemmer = PorterStemmer()
+# from nltk.stem.porter import *
+# stemmer = PorterStemmer()
 stemmer = SnowballStemmer("english")
 
-#pattern = r'[\d.,]+|[A-Z][.A-Z]+\b\.*|\w+|\S'
+# pattern = r'[\d.,]+|[A-Z][.A-Z]+\b\.*|\w+|\S'
 pattern = r'\w+|\?|\!|\"|\'|\;|\:'
+
 
 class Tokenizer(object):
     def __init__(self):
         self.tok = RegexpTokenizer(pattern)
         self.stemmer = stemmer
+
     def __call__(self, doc):
         return [self.stemmer.stem(token) 
                 for token in self.tok.tokenize(doc)]
@@ -90,7 +75,7 @@ clf_text = Pipeline([('vect', TfidfVectorizer()),
                       ('clf', MultinomialNB())])
              
 
-clf_text1 = Pipeline([('vect', TfidfVectorizer(tokenizer=Tokenizer(),stop_words='english',ngram_range=(1, 2),max_features=500)),
+clf_text1 = Pipeline([('vect', TfidfVectorizer(tokenizer=Tokenizer(), stop_words='english', ngram_range=(1, 2), max_features=500)),
                       #('tfidf', TfidfTransformer()),
                       ('clf', MultinomialNB())])
              
