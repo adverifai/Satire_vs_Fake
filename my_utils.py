@@ -40,7 +40,8 @@ def load_data(base_dir, label):
             curr_file = codecs.open(base_dir + f.strip(), "r", encoding="ISO-8859-1")
             lines = curr_file.readlines()
             # headline = lines[0].strip()
-            text = lines[0].strip() + " " + lines[2].strip()
+            # text = lines[0].strip() + " " + lines[2].strip()
+            text = lines[2].strip()
             if label in f:
                 data["document"].append(text)
                 data["label"].append(label)
@@ -57,3 +58,9 @@ def read_fake_satire_dataset(base_dir):
     fake_df["bin_label"] = 0
     satire_df["bin_label"] = 1
     return pd.concat([fake_df, satire_df]).sample(frac=1).reset_index(drop=True)
+
+
+def drop_constant_columns(df):
+    nunique = df.apply(pd.Series.nunique)
+    cols_to_drop = nunique[nunique == 1].index
+    return df.drop(cols_to_drop, axis=1)
