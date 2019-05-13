@@ -9,8 +9,8 @@ from sklearn.svm import SVC
 import copy
 import numpy as np
 import pandas as pd
-from pre_processing import text_clean
 import my_utils
+from pre_processing import text_clean
 from my_utils import drop_constant_columns
 
 
