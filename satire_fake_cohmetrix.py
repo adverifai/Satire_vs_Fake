@@ -3,6 +3,7 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
 import my_utils
@@ -68,6 +69,13 @@ def create_regresssion_input():
 
 
 def logistic_regression(x, y, model_features):
+    """
+    non-cross validation version of logistic regression
+    :param x:
+    :param y:
+    :param model_features:
+    :return:
+    """
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
     logreg = LogisticRegression(class_weight="balanced", solver='lbfgs')
     logreg.fit(x_train, y_train)
@@ -85,26 +93,16 @@ def logistic_regression(x, y, model_features):
     print(confusion_matrix(y_test, y_pred))
 
 
-def svm_classification(x, y):
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
-    clf = SVC(gamma='auto')
-    clf.fit(x_train, y_train)
-    y_pred = clf.predict(x_test)
-    print('Accuracy: {:.2f}'.format(clf.score(x_test, y_test)))
-    print(classification_report(y_test, y_pred))
-    print("Confusion matrix")
-    print(confusion_matrix(y_test, y_pred))
-
-
-def naive_classification(x, y):
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
-    clf = GaussianNB()
-    clf.fit(x_train, y_train)
-    y_pred = clf.predict(x_test)
-    print('Accuracy: {:.2f}'.format(clf.score(x_test, y_test)))
-    print(classification_report(y_test, y_pred))
-    print("Confusion matrix")
-    print(confusion_matrix(y_test, y_pred))
+def my_classifier(x, y, clf):
+    """
+    binary classification using different classifiers and cross validation
+    :param x: independent variables
+    :param y: dependent variable
+    :param clf: classifier
+    :return:
+    """
+    scores = cross_val_score(clf, x, y, cv=5, scoring='f1_macro')
+    print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 
 data = pd.read_csv("data/classification.csv")
@@ -113,6 +111,15 @@ model_features = list(data)
 x = data.iloc[:, 1:len(model_features) - 1]
 y = data.iloc[:, len(model_features) - 1]
 
-# scaling the data
 model_features = list(x)
-naive_classification(x, y)
+# naive bayes
+print("Naive Bayes")
+my_classifier(x, y, GaussianNB())
+
+# svm
+print("SVM")
+my_classifier(x, y, SVC(kernel='linear', C=1))
+
+# logistic regression
+print("Logistic Regression")
+my_classifier(x, y, LogisticRegression(class_weight="balanced", solver='lbfgs'))
