@@ -198,8 +198,8 @@ def get_prediction(in_sentences):
 
 # list of models can be found here: https://tfhub.dev/s?q=bert
 # BERT_MODEL_HUB = "https://tfhub.dev/google/bert_uncased_L-12_H-768_A-12/1"
-# BERT_MODEL_HUB = "https://tfhub.dev/google/bert_uncased_L-24_H-1024_A-16/1"
-BERT_MODEL_HUB = "https://tfhub.dev/google/bert_cased_L-24_H-1024_A-16/1"
+BERT_MODEL_HUB = "https://tfhub.dev/google/bert_uncased_L-24_H-1024_A-16/1"
+# BERT_MODEL_HUB = "https://tfhub.dev/google/bert_cased_L-24_H-1024_A-16/1"
 
 OUTPUT_DIR = 'data/models'
 DO_DELETE = True

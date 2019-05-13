@@ -1,3 +1,10 @@
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
+from sklearn.naive_bayes import GaussianNB
+from sklearn.svm import SVC
+
 import my_utils
 import copy
 import pandas as pd
@@ -12,7 +19,9 @@ def create_cohmetrix_input():
 
     for index, row in data.iterrows():
         with open('data/cohmetrix/input/d' + str(index) + '_' + str(row[2]) + '.txt', 'w+') as text_file:
-            text_file.write(text_clean(row[0], True, True, False, 1))
+            # if we want to c;ean the text
+            # text_file.write(text_clean(row[0], True, True, False, 1))
+            text_file.write(row[0])
             text_file.close()
 
     print("Created the input files for Coh-Metrix successfully.")
@@ -57,3 +66,53 @@ def create_regresssion_input():
 
     print("Created regression input files successfully.")
 
+
+def logistic_regression(x, y, model_features):
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
+    logreg = LogisticRegression(class_weight="balanced", solver='lbfgs')
+    logreg.fit(x_train, y_train)
+    print("\n\nLogistic regression report")
+    print("=========================")
+    if model_features != "":
+        # print(logreg.coef_)
+        feature_coeff = list(zip(logreg.coef_[0], model_features))
+        for item in sorted(feature_coeff, key=lambda x: abs(x[0])):
+            print(item)
+    y_pred = logreg.predict(x_test)
+    print('Accuracy: {:.2f}'.format(logreg.score(x_test, y_test)))
+    print(classification_report(y_test, y_pred))
+    print("Confusion matrix")
+    print(confusion_matrix(y_test, y_pred))
+
+
+def svm_classification(x, y):
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
+    clf = SVC(gamma='auto')
+    clf.fit(x_train, y_train)
+    y_pred = clf.predict(x_test)
+    print('Accuracy: {:.2f}'.format(clf.score(x_test, y_test)))
+    print(classification_report(y_test, y_pred))
+    print("Confusion matrix")
+    print(confusion_matrix(y_test, y_pred))
+
+
+def naive_classification(x, y):
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=0)
+    clf = GaussianNB()
+    clf.fit(x_train, y_train)
+    y_pred = clf.predict(x_test)
+    print('Accuracy: {:.2f}'.format(clf.score(x_test, y_test)))
+    print(classification_report(y_test, y_pred))
+    print("Confusion matrix")
+    print(confusion_matrix(y_test, y_pred))
+
+
+data = pd.read_csv("data/classification.csv")
+model_features = list(data)
+
+x = data.iloc[:, 1:len(model_features) - 1]
+y = data.iloc[:, len(model_features) - 1]
+
+# scaling the data
+model_features = list(x)
+naive_classification(x, y)
