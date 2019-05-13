@@ -6,11 +6,11 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVC
 
-import my_utils
 import copy
-import pandas as pd
 import numpy as np
+import pandas as pd
 from pre_processing import text_clean
+import my_utils
 from my_utils import drop_constant_columns
 
 
