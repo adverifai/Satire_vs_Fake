@@ -42,9 +42,9 @@ def load_data(base_dir, label):
             # this is the headline text
             # text = lines[0].strip()
             # this is the main body text
-            # text = lines[2].strip()
+            text = lines[2].strip()
             # this is headline AND main body text
-            text = lines[0].strip() + ". " + lines[2].strip()
+            # text = lines[0].strip() + ". " + lines[2].strip()
             if label in f:
                 data["document"].append(text)
                 data["label"].append(label)

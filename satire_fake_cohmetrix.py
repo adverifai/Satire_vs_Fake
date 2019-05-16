@@ -4,6 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.svm import SVC
 
 import copy
@@ -123,3 +124,9 @@ my_classifier(x, y, SVC(kernel='linear', C=1))
 # logistic regression
 print("Logistic Regression")
 my_classifier(x, y, LogisticRegression(class_weight="balanced", solver='lbfgs'))
+
+print("Gradient Boosting")
+learning_rates = [0.05, 0.1, 0.25, 0.5, 0.75, 1]
+for learning_rate in learning_rates:
+    gb = GradientBoostingClassifier(learning_rate=learning_rate)
+    my_classifier(x, y, gb)
