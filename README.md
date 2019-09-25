@@ -1,4 +1,4 @@
-# Satire_vs_Fake
+# Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues
 
 ### Files in data folder:
 In all of the following file, 0 and 1 are the labels for fake and satire articles, respectively.
