@@ -1,4 +1,4 @@
-# Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues
+# Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues (NLP4IF, EMNLP-IJCNLP 2019)
 
 #### Description of classes:
 * **classify_satire_fake.py**: this code implements a Multinational Naive Bayes text classifier, as described in the paper of Golbeck et al. 2018 (Fake news vs satire: A dataset and analysis).
