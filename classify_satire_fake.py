@@ -3,6 +3,10 @@
 """
 Created on Tue Apr  2 11:32:14 2019
 
+# The following code implements a Multinational Naive Bayes text classifier, as described in the paper of Golbeck et al. 2018 (Fake news vs satire: A dataset and analysis).
+# Please note that in our experiments we were not able to redproduce the same accuracy result as in the orginal paper. This could be related to the difference between Weka (used by the original work) and Scikit-learn implementation (in our work).
+# The baseline results reported in our work is based on the following code.
+
 @author: olevi
 """
 
