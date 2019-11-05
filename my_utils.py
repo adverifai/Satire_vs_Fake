@@ -56,6 +56,7 @@ def load_data(base_dir, label):
 
 
 def read_fake_satire_dataset(base_dir):
+    # fake: 0, satire: 1
     fake_df = load_data(base_dir, "Fake")
     satire_df = load_data(base_dir, "Satire")
     fake_df["bin_label"] = 0
