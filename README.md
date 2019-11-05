@@ -1,4 +1,6 @@
-# Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues
+# Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues (NLP4IF, EMNLP-IJCNLP 2019)
+
+[![DOI:10.18653/v1/D19-5004](https://zenodo.org/badge/DOI/10.18653/v1/D19-5004.svg)](https://doi.org/10.18653/v1/D19-5004)
 
 #### Description of classes:
 * **classify_satire_fake.py**: this code implements a Multinational Naive Bayes text classifier, as described in the paper of Golbeck et al. 2018 (Fake news vs satire: A dataset and analysis).
@@ -14,10 +16,15 @@ In all of the following file, `0` and `1` are the labels for `fake` and `satire`
 If you found our work or any insight we report interesting, please use the following information to cite our paper:
 
 ```
-@article{levi2019identifying,
-         title={Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues},
-         author={Levi, Or and Hosseini, Pedram and Diab, Mona and Broniatowski, David A},
-         journal={arXiv preprint arXiv:1910.01160},
-         year={2019}
+@inproceedings{levi-etal-2019-identifying,
+    title = "Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues",
+    author = "Levi, Or and Hosseini, Pedram and Diab, Mona and Broniatowski, David",
+    booktitle = "Proceedings of the Second Workshop on Natural Language Processing for Internet Freedom: Censorship, Disinformation, and Propaganda",
+    month = nov,
+    year = "2019",
+    address = "Hong Kong, China",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/D19-5004",
+    pages = "31--35",
 }
 ```
