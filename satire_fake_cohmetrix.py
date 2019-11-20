@@ -27,10 +27,10 @@ def create_cohmetrix_input():
     data = my_utils.read_fake_satire_dataset("data/FakeNewsData/StoryText 2/")
 
     for index, row in data.iterrows():
-        with open('data/cohmetrix/input/d' + str(index) + '_' + str(row[2]) + '.txt', 'w+') as text_file:
+        with open('data/cohmetrix/input/d' + str(row.doc_id) + '_' + str(row.bin_label) + '.txt', 'w+') as text_file:
             # if we want to clean the text
             # text_file.write(text_clean(row[0], True, True, False, 1))
-            text_file.write(row[0])
+            text_file.write(row.document)
             text_file.close()
 
 
