@@ -42,14 +42,16 @@ def create_regresssion_input():
     """
     coh_data = pd.read_csv("data/cohmetrix/output/satirefake.csv")
     x_columns = list(coh_data.iloc[:, 1:])
+    x_ids = []
     x_reg = []
     y_reg = []
 
     for item in coh_data.iterrows():
         tmp = item[1][0].split('\\')
         tmp = tmp[len(tmp)-1].split('.')[0].split('_')
+        doc_id = int(tmp[0].replace('d', ''))
         doc_label = int(tmp[1])
-
+        x_ids.append(doc_id)
         x_reg.append(item[1][1:])
         y_reg.append(doc_label)
 
@@ -66,9 +68,10 @@ def create_regresssion_input():
     # x_lin = scaler.fit_transform(x_lin)
 
     x_full = copy.deepcopy(x_reg)
+    x_full["id"] = x_ids
     x_full["label"] = y_reg
     x_full = x_full.fillna(0)
-    writer = pd.ExcelWriter('data/satire_fake_full.xlsx')
+    writer = pd.ExcelWriter('data/cohmetrix/output/satirefake_full.xlsx')
     x_full.to_excel(writer, 'Sheet1')
     writer.save()
 
@@ -100,7 +103,7 @@ def logistic_regression(x, y, model_features):
     print(confusion_matrix(y_test, y_pred))
 
 
-def my_classifier(x, y, clf):
+def my_classifier(ids, x, y, clf):
     """
     binary classification using cross validation
     :param x: independent variables
@@ -108,40 +111,68 @@ def my_classifier(x, y, clf):
     :param clf: classifier
     :return:
     """
+
+    def get_misclassified(X_fold, y_fold, clf_estimator):
+        y_test = np.asarray(y_fold)
+        misclassified = np.where(y_test != clf_estimator.predict(X_fold))
+        return misclassified
+
+    n_fold = 10
     scoring = {'f1': 'f1_micro', 'prec': 'precision', 'rec': 'recall'}
-    scores = cross_validate(clf, x, y, cv=10, scoring=scoring)
+    scores = cross_validate(clf, x, y, return_estimator=True, cv=n_fold, scoring=scoring)
     print("Precision (test): " + str(scores['test_prec'].mean()))
     print("Recall (test): " + str(scores['test_rec'].mean()))
     print("F1 (test): " + str(scores['test_f1'].mean()))
 
+    # -----------------------------
+    # getting misclassified samples
+    misclassified_ids = {}
+    for i in range(n_fold):
+        misclassified = get_misclassified(x, y, scores['estimator'][i])
+        for index, row in ids[misclassified[0]].items():
+            curr_id = str(row) + "_" + str(y[index])
+            if curr_id in misclassified_ids:
+                misclassified_ids[curr_id] += 1
+            else:
+                misclassified_ids[curr_id] = 1
+
+    # check if one sample is misclassified by all the estimators/classifiers
+    final_misclassified = []
+    for k, v in misclassified_ids.items():
+        if v == 10:
+            final_misclassified.append(k)
+
+    print(*final_misclassified, sep="\n")
+    # -----------------------------
     # if only using one scoring metric
     # scores = cross_val_score(clf, x, y, cv=10, scoring=scoring)
     # print("Accuracy: %0.2f (+/- %0.2f)" % (scores.mean(), scores.std() * 2))
 
 
-create_regresssion_input()
+# create_regresssion_input()
 
-data = pd.read_csv("data/classification.csv")
+data = pd.read_csv("data/cohmetrix/classification.csv")
 model_features = list(data)
 
-x = data.iloc[:, 1:len(model_features) - 1]
+ids = data.iloc[:, 1]
+x = data.iloc[:, 2:len(model_features) - 1]
 y = data.iloc[:, len(model_features) - 1]
 
 model_features = list(x)
 # naive bayes
 print("Naive Bayes")
-my_classifier(x, y, GaussianNB())
+my_classifier(ids, x, y, GaussianNB())
 print("---------------------------")
 # svm
 print("SVM")
-my_classifier(x, y, SVC(kernel='linear', C=1))
+my_classifier(ids, x, y, SVC(kernel='linear', C=1))
 print("---------------------------")
 # logistic regression
 print("Logistic Regression")
-my_classifier(x, y, LogisticRegression(class_weight="balanced", solver='lbfgs'))
+my_classifier(ids, x, y, LogisticRegression(class_weight="balanced", solver='lbfgs'))
 print("---------------------------")
 print("Gradient Boosting")
 learning_rates = [0.05, 0.1, 0.25, 0.5, 0.75, 1]
 for learning_rate in learning_rates:
     gb = GradientBoostingClassifier(learning_rate=learning_rate)
-    my_classifier(x, y, gb)
+    my_classifier(ids, x, y, gb)
