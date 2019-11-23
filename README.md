@@ -2,6 +2,17 @@
 
 [![DOI:10.18653/v1/D19-5004](https://zenodo.org/badge/DOI/10.18653/v1/D19-5004.svg)](https://doi.org/10.18653/v1/D19-5004)
 
+#### UPDATE (11/23/2019): Coh-Metrix-based classification
+By doing some preprocessing on input satire and fake news articles, adding some missing paragraphs, in particular, we could achieve a better performance for Coh-Metrix-based classification. In the following, please find the results of our best classifier trained and tested in a 10-fold cross validation setup:
+
+| Logistic Regression  | Mean on test sets |
+| ------------- | ------------- |
+| Precision | 0.7314872063519257  |
+| Recall | 0.7628654970760234  |
+| F1 | 0.771716230451341 |
+
+
+
 #### Description of classes:
 * **classify_satire_fake.py**: this code implements a Multinational Naive Bayes text classifier, as described in the paper of Golbeck et al. 2018 (Fake news vs satire: A dataset and analysis).
 
