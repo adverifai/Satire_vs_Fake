@@ -28,7 +28,7 @@ In all of the following file, `0` and `1` are the labels for `fake` and `satire`
 ### Citation Information
 If you found our work or any insight we report interesting, please use the following information to cite our paper:
 
-```
+```bibtex
 @inproceedings{levi-etal-2019-identifying,
     title = "Identifying Nuances in Fake News vs. Satire: Using Semantic and Linguistic Cues",
     author = "Levi, Or and Hosseini, Pedram and Diab, Mona and Broniatowski, David",
